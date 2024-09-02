@@ -1,0 +1,73 @@
+ext {
+    junitVersion = project.hasProperty('junitVersion') ? rootProject.ext.junitVersion : '4.13.2'
+    androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
+    androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.1.5'
+    androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.5.1'
+    rolsterGooglePlayServicesAuthVersion = project.hasProperty('rolsterGooglePlayServicesAuthVersion') ? rootProject.ext.rolsterGooglePlayServicesAuthVersion : '20.6.0'
+    rolsterAndroidAppUpdateVersion = project.hasProperty('rolsterAndroidAppUpdateVersion') ? rootProject.ext.rolsterAndroidAppUpdateVersion : '2.1.0'
+    rolsterHuaweiHmsServicesVersion = project.hasProperty('rolsterHuaweiHmsServicesVersion') ? rootProject.ext.rolsterHuaweiHmsServicesVersion : '6.4.0.303'
+    rolsterHuaweiAppServicesVersion = project.hasProperty('rolsterHuaweiAppServicesVersion') ? rootProject.ext.rolsterHuaweiAppServicesVersion : '6.10.0.300'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace "com.rolster.capacitor.update"
+    compileSdkVersion project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
+    defaultConfig {
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 22
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
+        versionCode 1
+        versionName "6.0.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+    maven {
+        url 'https://developer.huawei.com/repo/'
+    }
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':capacitor-android')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "com.google.android.gms:play-services-auth:$rolsterGooglePlayServicesAuthVersion"
+    implementation "com.google.android.play:app-update:$rolsterAndroidAppUpdateVersion"
+    implementation "com.huawei.hms:base:$rolsterHuaweiHmsServicesVersion"
+    implementation "com.huawei.hms:appservice:$rolsterHuaweiAppServicesVersion"
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+}
