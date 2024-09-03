@@ -1,6 +1,6 @@
 {
   "name": "@rolster/capacitor-update-manager",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Plugin for update manager in mobile Android, Huawei and iOS",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -19,7 +19,7 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin",
-    "RolsterCapacitorOtpManager.podspec"
+    "RolsterCapacitorUpdateManager.podspec"
   ],
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
