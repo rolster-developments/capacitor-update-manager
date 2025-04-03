@@ -125,16 +125,18 @@ public class UpdateManagerPlugin extends Plugin {
     }
 
     private String getStatusUpdate(PluginCall call, int versionCode) {
-        int minorMandatory = call.getInt("minorMandatory", 2);
         int splitCount = call.getInt("splitCount", 2);
 
         UpdateManagerVersion storeVersion = createVersion(versionCode, splitCount);
         UpdateManagerVersion currentVersion = createVersion(getCurrentNumber(), splitCount);
 
-        return getStatusLevel(storeVersion, currentVersion, minorMandatory);
+        return getStatusLevel(storeVersion, currentVersion, call);
     }
 
-    private String getStatusLevel(UpdateManagerVersion storeVersion, UpdateManagerVersion currentVersion, int minorMandatory) {
+    private String getStatusLevel(UpdateManagerVersion storeVersion, UpdateManagerVersion currentVersion, PluginCall call) {
+        int minorMandatory = call.getInt("minorMandatory", 2);
+        int patchMandatory = call.getInt("patchMandatory", 4);
+
         if (storeVersion.major > currentVersion.major) {
             return "mandatory";
         }
@@ -148,7 +150,7 @@ public class UpdateManagerPlugin extends Plugin {
         if (storeVersion.minor == currentVersion.minor && storeVersion.patch > currentVersion.patch) {
             int patchCount = storeVersion.patch - currentVersion.patch;
 
-            return patchCount >= minorMandatory ? "flexible" : "optional";
+            return patchCount >= patchMandatory "mandatory" : patchCount >= minorMandatory ? "flexible" : "optional";
         }
 
         return "unnecessary";

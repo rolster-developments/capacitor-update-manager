@@ -13,17 +13,18 @@ export enum UpdateStatus {
   Unnecessary = 'unnecessary'
 }
 
-export interface UpdateStatusResponse {
+export interface VerifyStatusResponse {
   status: UpdateStatusType;
   versionCode?: string;
   versionNumber?: string;
 }
 
-export interface VerifyStatusProps {
+export interface VerifyStatusOptions {
   minorMandatory?: number;
+  patchMandatory?: number;
   splitCount?: number;
 }
 
 export interface UpdateManagerPlugin {
-  verifyStatus(props?: VerifyStatusProps): Promise<UpdateStatusResponse>;
+  verifyStatus(options?: VerifyStatusOptions): Promise<VerifyStatusResponse>;
 }

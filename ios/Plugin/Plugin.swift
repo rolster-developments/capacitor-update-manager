@@ -53,12 +53,10 @@ enum UpdateManagerError: Error {
 public class UpdateManagerPlugin: CAPPlugin {
     @objc func verifyStatus(_ call: CAPPluginCall) {
         Task {
-            let minorMandatory = call.getInt("minorMandatory") ?? 2
-            
             do {
                 let urlStore = try self.createUrlStoreApplication()
                 let updateStatus = try await self.requestUpdateStatus(url: urlStore)
-                let updateLevel = self.getUpdateLevel(updateStatus: updateStatus, minorMandatory: minorMandatory)
+                let updateLevel = self.getUpdateLevel(updateStatus: updateStatus, call: call)
                 
                 call.resolve([
                     "status": updateLevel,
@@ -101,7 +99,10 @@ public class UpdateManagerPlugin: CAPPlugin {
         return url
     }
 
-    private func getUpdateLevel(updateStatus: UpdateStatus, minorMandatory: Int) -> String {
+    private func getUpdateLevel(updateStatus: UpdateStatus, call: CAPPluginCall) -> String {
+        let minorMandatory = call.getInt("minorMandatory") ?? 2
+        let patchMandatory = call.getInt("patchMandatory") ?? 4
+
         let currentVersion = getVersion(version: updateStatus.currentVersion)
         let storeVersion = getVersion(version: updateStatus.storeVersion)
 
@@ -118,7 +119,7 @@ public class UpdateManagerPlugin: CAPPlugin {
         if storeVersion.minor == currentVersion.minor && storeVersion.patch > currentVersion.patch {
             let patchCount = storeVersion.patch - currentVersion.patch
 
-            return patchCount >= minorMandatory ? "flexible" : "optional"
+            return patchCount >= patchMandatory ? "mandatory" : patchCount >= minorMandatory ? "flexible" : "optional"
         }
         
         return "unnecessary"

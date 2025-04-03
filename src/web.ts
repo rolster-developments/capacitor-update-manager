@@ -2,20 +2,21 @@ import { WebPlugin } from '@capacitor/core';
 import {
   UpdateManagerPlugin,
   UpdateStatus,
-  UpdateStatusResponse,
-  VerifyStatusProps
+  VerifyStatusOptions,
+  VerifyStatusResponse
 } from './definitions';
 
-const verifyStatusProps: VerifyStatusProps = {
+const options: VerifyStatusOptions = {
   minorMandatory: 2,
+  patchMandatory: 4,
   splitCount: 2
 };
 
 export class UpdateManagerWeb extends WebPlugin implements UpdateManagerPlugin {
-  public verifyStatus(_ = verifyStatusProps): Promise<UpdateStatusResponse> {
+  public verifyStatus(_ = options): Promise<VerifyStatusResponse> {
     return Promise.resolve({
       status: UpdateStatus.Unnecessary,
-      versionCode: '5.0.0'
+      versionCode: '1.0.0'
     });
   }
 }
