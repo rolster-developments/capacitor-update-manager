@@ -1,6 +1,6 @@
 {
   "name": "@rolster/capacitor-update-manager",
-  "version": "6.0.5",
+  "version": "6.1.4",
   "description": "Plugin for update manager in mobile Android, Huawei and iOS",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -15,6 +15,8 @@
   ],
   "license": "MIT",
   "files": [
+    "android/src/google",
+    "android/src/huawei",
     "android/src/main",
     "android/build.gradle",
     "dist/",

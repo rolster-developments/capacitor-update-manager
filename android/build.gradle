@@ -30,9 +30,12 @@ android {
     defaultConfig {
         minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 22
         targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
-        versionCode 1
-        versionName "6.0.0"
+        versionCode 10
+        versionName "6.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        buildConfig true
     }
     buildTypes {
         release {
@@ -46,6 +49,17 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+    flavorDimensions "store"
+    productFlavors {
+        google {
+            dimension "store"
+            buildConfigField "boolean", "IS_HMS", "false"
+        }
+        huawei {
+            dimension "store"
+            buildConfigField "boolean", "IS_HMS", "true"
+        }
     }
 }
 
@@ -62,8 +76,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-    implementation "com.google.android.gms:play-services-auth:$rolsterGooglePlayServicesAuthVersion"
-    implementation "com.google.android.play:app-update:$rolsterAndroidAppUpdateVersion"
+    googleImplementation "com.google.android.gms:play-services-auth:$rolsterGooglePlayServicesAuthVersion"
+    googleImplementation "com.google.android.play:app-update:$rolsterAndroidAppUpdateVersion"
     huaweiImplementation "com.huawei.hms:base:$rolsterHuaweiHmsServicesVersion"
     huaweiImplementation "com.huawei.hms:appservice:$rolsterHuaweiAppServicesVersion"
     testImplementation "junit:junit:$junitVersion"
