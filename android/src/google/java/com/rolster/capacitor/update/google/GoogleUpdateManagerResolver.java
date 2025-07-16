@@ -24,6 +24,8 @@ public class GoogleUpdateManagerResolver implements UpdateManagerResolver {
         appUpdateGoogle = AppUpdateManagerFactory.create(this.context);
 
         JSObject result = new JSObject();
+        result.put("versionCode", versionApp);
+        result.put("versionNumber", numberApp);
 
         appUpdateGoogle.getAppUpdateInfo().addOnSuccessListener(appInfoGoogle -> {
             if (appInfoGoogle.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
@@ -35,7 +37,6 @@ public class GoogleUpdateManagerResolver implements UpdateManagerResolver {
                     int patchMandatory = call.getInt("patchMandatory", 4);
 
                     result.put("status", UpdateManagerUtils.getStatusUpdate(numberStore, numberApp, minorMandatory, patchMandatory, splitCount));
-                    result.put("versionCode", versionApp);
                     result.put("versionNumber", numberStore);
                 } catch (Exception error) {
                     result.put("status", "error");

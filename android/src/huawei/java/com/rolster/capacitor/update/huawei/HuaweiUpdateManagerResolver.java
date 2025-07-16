@@ -32,6 +32,8 @@ public class HuaweiUpdateManagerResolver implements UpdateManagerResolver {
         appUpdateHuawei = JosApps.getAppUpdateClient(this.context);
 
         JSObject result = new JSObject();
+        result.put("versionCode", versionApp);
+        result.put("versionNumber", numberApp);
 
         appUpdateHuawei.checkAppUpdate(this.context, new CheckUpdateCallBack() {
             @Override
@@ -47,7 +49,6 @@ public class HuaweiUpdateManagerResolver implements UpdateManagerResolver {
                     int patchMandatory = call.getInt("patchMandatory", 4);
 
                     result.put("status", UpdateManagerUtils.getStatusUpdate(numberStore, numberApp, minorMandatory, patchMandatory, splitCount));
-                    result.put("versionCode", versionApp);
                     result.put("versionNumber", numberStore);
                 } else {
                     result.put("status", "unnecessary");
