@@ -38,10 +38,10 @@ public class HuaweiUpdateManagerResolver implements UpdateManagerResolver {
     appUpdateHuawei.checkAppUpdate(this.context, new CheckUpdateCallBack() {
       @Override
       public void onUpdateInfo(Intent intent) {
-        int status = intent.getIntExtra(UpdateKey.STATUS, -1);
+        int updateStatus = intent.getIntExtra(UpdateKey.STATUS, -1);
         Serializable info = intent.getSerializableExtra(UpdateKey.INFO);
 
-        if (status == HAS_UPGRADE_INFO && info instanceof ApkUpgradeInfo upgradeInfo) {
+        if (updateStatus == HAS_UPGRADE_INFO && info instanceof ApkUpgradeInfo upgradeInfo) {
           int storeCode = upgradeInfo.getVersionCode_();
 
           int splitCount = call.getInt("splitCount", 2);
