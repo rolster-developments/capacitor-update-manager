@@ -15,8 +15,9 @@ export enum UpdateStatus {
 
 export interface VerifyStatusResponse {
   status: UpdateStatusType;
+  versionApp: string;
   versionCode?: string;
-  versionNumber?: string;
+  versionStore?: string;
 }
 
 export interface VerifyStatusOptions {

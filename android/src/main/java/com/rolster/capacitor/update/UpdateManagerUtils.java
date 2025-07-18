@@ -1,69 +1,69 @@
 package com.rolster.capacitor.update;
 
 public class UpdateManagerUtils {
-    public static String getStatusUpdate(
-        int numberStore,
-        int numberApp,
-        int minorMandatory,
-        int patchMandatory, 
-        int splitCount) {
-        UpdateManagerVersion versionApp = createVersion(numberApp, splitCount);
-        UpdateManagerVersion versionStore = createVersion(numberStore, splitCount);
+  public static String getStatusUpdate(
+    int numberStore,
+    int numberApp,
+    int minorMandatory,
+    int patchMandatory, 
+    int splitCount) {
+    UpdateManagerVersion versionApp = createVersion(numberApp, splitCount);
+    UpdateManagerVersion versionStore = createVersion(numberStore, splitCount);
 
-        return getStatusLevel(versionStore, versionApp, minorMandatory, patchMandatory);
+    return getStatus(versionStore, versionApp, minorMandatory, patchMandatory);
+  }
+
+  private static String getStatus(
+    UpdateManagerVersion versionStore,
+    UpdateManagerVersion versionApp,
+    int minorMandatory,
+    int patchMandatory) {
+    if (versionStore.major > versionApp.major) {
+      return "mandatory";
     }
 
-    private static String getStatusLevel(
-        UpdateManagerVersion versionStore,
-        UpdateManagerVersion versionApp,
-        int minorMandatory,
-        int patchMandatory) {
-        if (versionStore.major > versionApp.major) {
-            return "mandatory";
-        }
+    if (versionStore.minor > versionApp.minor) {
+      int minorCount = versionStore.minor - versionApp.minor;
 
-        if (versionStore.minor > versionApp.minor) {
-            int minorCount = versionStore.minor - versionApp.minor;
-
-            return minorCount >= minorMandatory ? "mandatory" : "flexible";
-        }
-
-        if (versionStore.minor == versionApp.minor && versionStore.patch > versionApp.patch) {
-            int patchCount = versionStore.patch - versionApp.patch;
-
-            return patchCount >= patchMandatory ? 
-                "mandatory" : patchCount >= minorMandatory ? "flexible" : "optional";
-        }
-
-        return "unnecessary";
+      return minorCount >= minorMandatory ? "mandatory" : "flexible";
     }
 
-    private static UpdateManagerVersion createVersion(int versionCode, int splitCount) {
-        String code = padZeros(String.valueOf(versionCode), splitCount * 3);
+    if (versionStore.minor == versionApp.minor && versionStore.patch > versionApp.patch) {
+      int patchCount = versionStore.patch - versionApp.patch;
 
-        int limitPatch = code.length() - splitCount;
-        int limitMinor = limitPatch - splitCount;
-
-        int codePatch = Integer.parseInt(code.substring(limitPatch));
-        int codeMinor = Integer.parseInt(code.substring(limitMinor, limitPatch));
-        int codeMajor = Integer.parseInt(code.substring(0, limitMinor));
-
-        return new UpdateManagerVersion(codeMajor, codeMinor, codePatch);
+      return patchCount >= patchMandatory ? 
+        "mandatory" : patchCount >= minorMandatory ? "flexible" : "optional";
     }
 
-    private static String padZeros(String inputString, int length) {
-        if (inputString.length() >= length) {
-            return inputString;
-        }
+    return "unnecessary";
+  }
 
-        StringBuilder sb = new StringBuilder();
+  private static UpdateManagerVersion createVersion(int versionCode, int splitCount) {
+    String code = padZeros(String.valueOf(versionCode), splitCount * 3);
 
-        while (sb.length() < length - inputString.length()) {
-            sb.append('0');
-        }
+    int limitPatch = code.length() - splitCount;
+    int limitMinor = limitPatch - splitCount;
 
-        sb.append(inputString);
+    int codePatch = Integer.parseInt(code.substring(limitPatch));
+    int codeMinor = Integer.parseInt(code.substring(limitMinor, limitPatch));
+    int codeMajor = Integer.parseInt(code.substring(0, limitMinor));
 
-        return sb.toString();
+    return new UpdateManagerVersion(codeMajor, codeMinor, codePatch);
+  }
+
+  private static String padZeros(String inputString, int length) {
+    if (inputString.length() >= length) {
+      return inputString;
     }
+
+    StringBuilder sb = new StringBuilder();
+
+    while (sb.length() < length - inputString.length()) {
+      sb.append('0');
+    }
+
+    sb.append(inputString);
+
+    return sb.toString();
+  }
 }

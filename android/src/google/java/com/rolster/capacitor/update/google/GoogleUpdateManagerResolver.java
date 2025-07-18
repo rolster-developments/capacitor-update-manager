@@ -11,47 +11,49 @@ import com.rolster.capacitor.update.UpdateManagerResolver;
 import com.rolster.capacitor.update.UpdateManagerUtils;
 
 public class GoogleUpdateManagerResolver implements UpdateManagerResolver {
-    private final Context context;
+  private final Context context;
 
-    private AppUpdateManager appUpdateGoogle;
+  private AppUpdateManager appUpdateGoogle;
     
-    public GoogleUpdateManagerResolver(Context context) {
-        this.context = context;
-    }
+  public GoogleUpdateManagerResolver(Context context) {
+    this.context = context;
+  }
 
-    @Override()
-    public void execute(PluginCall call, int numberApp, String versionApp) {
-        appUpdateGoogle = AppUpdateManagerFactory.create(this.context);
+  @Override()
+  public void execute(PluginCall call, int appCode, String appVersion) {
+    appUpdateGoogle = AppUpdateManagerFactory.create(this.context);
 
-        JSObject result = new JSObject();
-        result.put("versionCode", versionApp);
-        result.put("versionNumber", numberApp);
+    JSObject result = new JSObject();
+    result.put("versionApp", appVersion);
+    result.put("versionCode", appCode);
 
-        appUpdateGoogle.getAppUpdateInfo().addOnSuccessListener(appInfoGoogle -> {
-            if (appInfoGoogle.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-                try {
-                    int numberStore = appInfoGoogle.availableVersionCode();
+    appUpdateGoogle.getAppUpdateInfo().addOnSuccessListener(appInfoGoogle -> {
+      if (appInfoGoogle.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+        try {
+          int storeCode = appInfoGoogle.availableVersionCode();
 
-                    int splitCount = call.getInt("splitCount", 2);
-                    int minorMandatory = call.getInt("minorMandatory", 2);
-                    int patchMandatory = call.getInt("patchMandatory", 4);
+          int splitCount = call.getInt("splitCount", 2);
+          int minorMandatory = call.getInt("minorMandatory", 2);
+          int patchMandatory = call.getInt("patchMandatory", 4);
 
-                    result.put("status", UpdateManagerUtils.getStatusUpdate(numberStore, numberApp, minorMandatory, patchMandatory, splitCount));
-                    result.put("versionNumber", numberStore);
-                } catch (Exception error) {
-                    result.put("status", "error");
-                    result.put("msgError", error.getMessage());
-                }
-            } else {
-                result.put("status", "unnecessary");
-            }
+          String status = UpdateManagerUtils.getStatusUpdate(storeCode, appCode, minorMandatory, patchMandatory, splitCount);
 
-            call.resolve(result);
-        }).addOnFailureListener(error -> {
-            result.put("status", "error");
-            result.put("msgError", error.getMessage());
+          result.put("status", status);
+          result.put("versionCode", storeCode);
+        } catch (Exception error) {
+          result.put("status", "error");
+          result.put("msgError", error.getMessage());
+        }
+      } else {
+        result.put("status", "unnecessary");
+      }
 
-            call.resolve(result);
-        });
-    }
+      call.resolve(result);
+    }).addOnFailureListener(error -> {
+      result.put("status", "error");
+      result.put("msgError", error.getMessage());
+
+      call.resolve(result);
+    });
+  }
 }

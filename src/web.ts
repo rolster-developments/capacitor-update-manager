@@ -16,7 +16,8 @@ export class UpdateManagerWeb extends WebPlugin implements UpdateManagerPlugin {
   public verifyStatus(_ = options): Promise<VerifyStatusResponse> {
     return Promise.resolve({
       status: UpdateStatus.Unnecessary,
-      versionCode: '1.0.0'
+      versionApp: '1.0.0',
+      versionStore: '0.0.0'
     });
   }
 }
